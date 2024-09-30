@@ -35,7 +35,7 @@ let bottomPipeImg;
 
 let velosityX = -2;
 let velosityY = 0; //jump speed
-let gravity = 0.4;
+let gravity = 0.2;
 
 let gameOver = false;
 let score = 0;
