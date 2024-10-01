@@ -31,14 +31,24 @@ let pipeY = 0;
 let topPipeImg;
 let bottomPipeImg;
 
+//gears
+
+let gearArray = [];
+let gearWidth = 40;
+let gearHight = 40;
+let gearX = boardWidth;
+let gearY = boardHight/2;
+
 //physics
 
 let velosityX = -2;
 let velosityY = 0; //jump speed
-let gravity = 0.2;
+let gravity = 0.3;
+let jumpSpeed = -5;
 
 let gameOver = false;
 let score = 0;
+let gearscore = 0;
 
 window.onload = function(){
     board = document.getElementById("board");
@@ -63,8 +73,15 @@ window.onload = function(){
     bottomPipeImg = new Image();
     bottomPipeImg.src = "./toppipe2.png";
 
+    gearImg = new Image();
+    gearImg.src = "./gear.png";
+
+    gearImgCollect = new Image();
+    gearImgCollect.src = "./clear.png";
+
     requestAnimationFrame(update);
-    setInterval(placePipes, 3000); //every 3 sec.
+    setInterval(placePipes, 10000); //every 10 sec.
+    setInterval(placeGears, 2000); //every 2 sec.
     document.addEventListener("keydown", moveBird);
 }
 
@@ -106,15 +123,37 @@ function update() {
         pipeArray.shift(); //удаляет 1-ю преграду
     }
 
+    //gears
+
+    for (let i = 0; i < gearArray.length; i++) {
+        let gear = gearArray[i];
+        gear.x += velosityX;
+        context.drawImage(gear.img, gear.x, gear.y, gear.width, gear.height);
+
+        if (!gear.collect && detectCollision(bird,gear)) {
+            gearscore += 1;
+            gear.collect = true;
+            gear.img = gearImgCollect;
+        }
+    }
+
+    //clear gears
+    while (gearArray.length >0 && gearArray[0].x < gearWidth) {
+        gearArray.shift();
+    }
+
     //score
     context.fillStyle = "white";
     context.font = "45px sans-serif";
     context.fillText(score, 5, 45);
+    context.fillText(gearscore, 5, 90)
 
     //game over text
 
     if (gameOver) {
-        context.fillText("GAME OVER", 5, 90);
+        context.fillStyle = "red";
+        context.font = "75px sans-serif";
+        context.fillText("GAME OVER", boardWidth/2, boardHight/2);
     }
 }
 
@@ -150,11 +189,29 @@ function placePipes() {
     pipeArray.push(bottomPipe);
 }
 
+function placeGears() {
+    if (gameOver) {
+        return
+    }
+
+    let randomGearY = board.height/2 + (Math.random() - 0.5)*(boardHight/2);
+    let gear = {
+        img : gearImg,
+        x : gearX,
+        y : randomGearY,
+        width : gearWidth,
+        height : gearHight,
+        collect : false
+    }
+
+    gearArray.push(gear);
+}
+
 function moveBird(e) {
     if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX")
     {
         //jump
-        velosityY = -6;
+        velosityY = jumpSpeed;
 
         //reset game 
         if (gameOver) {
