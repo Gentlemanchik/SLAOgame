@@ -73,8 +73,12 @@ window.onload = function(){
     bottomPipeImg = new Image();
     bottomPipeImg.src = "./toppipe2.png";
 
-    gearImg = new Image();
-    gearImg.src = "./gear.png";
+    gearImg1 = new Image();
+    gearImg1.src = "./gear.png";
+    gearImg2 = new Image();
+    gearImg2.src = "./gear2.png"
+    gearImg3 = new Image();
+    gearImg3.src = "./gear3.png";
 
     gearImgCollect = new Image();
     gearImgCollect.src = "./clear.png";
@@ -136,7 +140,7 @@ function update() {
             gear.img = gearImgCollect;
         }
 
-        //cleat GearXPipes
+        //clear GearXPipes
         for (let i = 0; i < pipeArray.length; i++) {
             let pipe = pipeArray[i];
             if (detectCollision(pipe, gear)) {
@@ -203,9 +207,10 @@ function placeGears() {
         return
     }
 
+    let gearImgArray = [gearImg1, gearImg2, gearImg3];
     let randomGearY = board.height/2 + (Math.random() - 0.5)*(boardHight/2);
     let gear = {
-        img : gearImg,
+        img : gearImgArray[Math.floor(Math.random()*3)],
         x : gearX,
         y : randomGearY,
         width : gearWidth,
