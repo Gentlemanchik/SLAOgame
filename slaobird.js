@@ -135,6 +135,15 @@ function update() {
             gear.collect = true;
             gear.img = gearImgCollect;
         }
+
+        //cleat GearXPipes
+        for (let i = 0; i < pipeArray.length; i++) {
+            let pipe = pipeArray[i];
+            if (detectCollision(pipe, gear)) {
+                gear.collect = true;
+                gear.img = gearImgCollect;
+            }
+        }
     }
 
     //clear gears
@@ -219,6 +228,8 @@ function moveBird(e) {
             pipeArray = [];
             score = 0;
             gameOver = false;
+            gearArray = [];
+            gearscore = 0;
         }
     }
 }
