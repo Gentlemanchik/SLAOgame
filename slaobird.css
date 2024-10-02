@@ -4,6 +4,15 @@ body {
 }
 
 #board {
-    /* background-color: b; */
     background-image: url("./forest.png");
+}
+
+@font-face {
+    font-family: WoWfont;
+    src: url(WarCraft.ttf);
+}
+
+h2 {
+    font-family: WoWfont;
+    color: white;
 }

@@ -1,4 +1,10 @@
 
+
+//interval
+let bartimer1;
+let bartimer2;
+let bartimer3;
+
 //board
 let board;
 let boardWidth = 900;
@@ -31,6 +37,13 @@ let pipeY = 0;
 let topPipeImg;
 let bottomPipeImg;
 
+//dragon
+
+let dragonWidth = 45;
+let dragonHight = 45;
+let dragonX = boardWidth;
+let dragonY = 0;
+
 //gears
 
 let gearArray = [];
@@ -46,9 +59,11 @@ let velosityY = 0; //jump speed
 let gravity = 0.3;
 let jumpSpeed = -5;
 
-let gameOver = false;
+//all parametres
+let gameState = 0;
 let score = 0;
 let gearscore = 0;
+let scaleImg = 10;
 
 window.onload = function(){
     board = document.getElementById("board");
@@ -80,19 +95,94 @@ window.onload = function(){
     gearImg3 = new Image();
     gearImg3.src = "./gear3.png";
 
+    textStart = new Image();
+    textStart.src = "./TextStart.png";
+    textGameOver = new Image();
+    textGameOver.src = "./TextGameOver.png";
+    textGameWin = new Image();
+    textGameWin.src = "./TextWin.png";
+
     gearImgCollect = new Image();
     gearImgCollect.src = "./clear.png";
 
+    gearCollectTable = new Image();
+    gearCollectTable.src = "./scoretable.png";
+
     requestAnimationFrame(update);
-    setInterval(placePipes, 10000); //every 10 sec.
-    setInterval(placeGears, 2000); //every 2 sec.
+    // bartimer1 = setInterval(placePipes, 10000); //every 10 sec.
+    // bartimer2 = setInterval(placeGears, 2000); //every 2 sec.
+    // bartimer3 = setInterval(setDifficulty, 4000); //every 4 sec.
     document.addEventListener("keydown", moveBird);
 }
 
 function update() {
     requestAnimationFrame(update);
-    if (gameOver){
-        return;
+
+    //проверка состояния игры
+    switch(gameState) {
+        case 0:
+            if (gameState == 0) {
+                context.drawImage(textStart, boardWidth/4, boardHight/4, boardWidth/2, boardHight/2);
+            }
+            return;
+        case 1:
+            break;
+        case 2:
+            if (gameState == 2) {
+                context.drawImage(textGameOver, 300, 200, 300, 150);
+            }
+            return;
+        case 3:
+            if (gameState == 3) {
+                if (scaleImg < 100) {
+                    context.clearRect(0, 0, board.width, board.height);
+                    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+                    for (let i = 0; i < pipeArray.length; i++) {
+                        let pipe = pipeArray[i];
+                        context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
+                    }
+                    for (let i = 0; i < gearArray.length; i++) {
+                        let gear = gearArray[i];
+                        context.drawImage(gear.img, gear.x, gear.y, gear.width, gear.height);
+                    }
+                    context.drawImage(gearCollectTable, 0, 0, 140, 80);
+                    context.fillStyle = "white";
+                        context.font = "30px WoWfont";
+                    context.fillText(gearscore, 60, 45)
+                    if (gearscore<10) {
+                        context.fillText("/45", 75, 45);
+                     }
+                     else {
+                        context.fillText("/45",90,45);
+                    }
+                    context.drawImage(textGameWin,200+(250*(100-scaleImg)/100),25+(225*(100-scaleImg)/100),500*(scaleImg/100),450*(scaleImg/100));
+                    scaleImg += 1;
+                }
+                else {
+                    context.clearRect(0, 0, board.width, board.height);
+                    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+                    for (let i = 0; i < pipeArray.length; i++) {
+                        let pipe = pipeArray[i];
+                        context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
+                    }
+                    for (let i = 0; i < gearArray.length; i++) {
+                        let gear = gearArray[i];
+                        context.drawImage(gear.img, gear.x, gear.y, gear.width, gear.height);
+                    }
+                    context.drawImage(gearCollectTable, 0, 0, 140, 80);
+                    context.fillStyle = "white";
+                        context.font = "30px WoWfont";
+                    context.fillText(gearscore, 60, 45)
+                    if (gearscore<10) {
+                        context.fillText("/45", 75, 45);
+                     }
+                     else {
+                        context.fillText("/45",90,45);
+                    }
+                    context.drawImage(textGameWin,200,25,500,450);
+                }
+            }
+            return;
     }
     context.clearRect(0, 0, board.width, board.height);
 
@@ -103,7 +193,7 @@ function update() {
     context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
     if (bird.y > boardHight) {
-        gameOver = true;
+        gameState = 2;
     }
 
     //pipes
@@ -118,7 +208,7 @@ function update() {
         }
 
         if (detectCollision(bird,pipe)) {
-            gameOver = true;
+            gameState = 2;
         }
     }
 
@@ -155,24 +245,29 @@ function update() {
         gearArray.shift();
     }
 
+    //scoretable
+    context.drawImage(gearCollectTable, 0, 0, 140, 80);
     //score
     context.fillStyle = "white";
-    context.font = "45px sans-serif";
-    context.fillText(score, 5, 45);
-    context.fillText(gearscore, 5, 90)
-
-    //game over text
-
-    if (gameOver) {
-        context.fillStyle = "red";
-        context.font = "75px sans-serif";
-        context.fillText("GAME OVER", boardWidth/2, boardHight/2);
+    context.font = "30px WoWfont";
+    //context.fillText(score, 5, 45);
+    context.fillText(gearscore, 60, 45)
+    if (gearscore<10) {
+        context.fillText("/45", 75, 45);
     }
+    else {
+        context.fillText("/45",90,45);
+    }
+
+    if (gearscore == 1) {
+        gameState = 3;
+    }
+
 }
 
 function placePipes() {
 
-    if (gameOver){
+    if (gameState == 2){
         return;
     }
 
@@ -203,7 +298,7 @@ function placePipes() {
 }
 
 function placeGears() {
-    if (gameOver) {
+    if (gameState == 2) {
         return
     }
 
@@ -228,16 +323,44 @@ function moveBird(e) {
         velosityY = jumpSpeed;
 
         //reset game 
-        if (gameOver) {
+        if (gameState == 2) {
+            context.clearRect(0, 0, board.width, board.height);
             bird.y = birdY;
             pipeArray = [];
             score = 0;
-            gameOver = false;
+            gameState = 0;
             gearArray = [];
             gearscore = 0;
+            velosityX = -2;
+            scaleImg = 10;
+            clearInterval(bartimer1);
+            clearInterval(bartimer2);
+            //clearInterval(bartimer3);
+        }
+        else if (gameState == 0) {
+            bartimer1 = setInterval(placePipes, 10000); //every 10 sec.
+            bartimer2 = setInterval(placeGears, 2000); //every 2 sec.
+            //bartimer3 = setInterval(setDifficulty, 4000); //every 4 sec.
+            gameState = 1;
+        }
+        else if (gameState == 3 && e.code == "KeyX") {
+            context.clearRect(0, 0, board.width, board.height);
+            bird.y = birdY;
+            pipeArray = [];
+            score = 0;
+            gameState = 0;
+            gearArray = [];
+            gearscore = 0;
+            velosityX = -2;
+            scaleImg = 10;
+            clearInterval(bartimer1);
+            clearInterval(bartimer2);
+            //clearInterval(bartimer3);
         }
     }
 }
+
+
 
 function detectCollision(a,b) {
     return a.x < b.x + b.width &&
@@ -245,3 +368,4 @@ function detectCollision(a,b) {
            a.y < b.y + b.height &&
            a.y + a.height > b.y;
 }
+
