@@ -1,5 +1,4 @@
 
-
 //interval
 let bartimer1;
 let bartimer2;
@@ -86,8 +85,10 @@ let gearY = boardHight/2;
 
 let velosityX = -2;
 let velosityY = 0; //jump speed
-let gravity = 0.3;
+let gravity = 0.25;
 let jumpSpeed = -5;
+let distance = 0;
+let dx = 2;
 
 //all parametres
 let gameState = 0;
@@ -418,7 +419,7 @@ function update() {
         difficultyState = 1;
     }
 
-    if (gearscore > 25) {
+    if (gearscore > 15) {
         difficultyState = 2;
     }
 
