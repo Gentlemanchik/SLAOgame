@@ -3,7 +3,9 @@
 //interval
 let bartimer1;
 let bartimer2;
-let bartimer3;
+
+let difbartimer1;
+let difbartimer2;
 
 //board
 let board;
@@ -39,10 +41,38 @@ let bottomPipeImg;
 
 //dragon
 
-let dragonWidth = 45;
-let dragonHight = 45;
+let dragonArray = [];
+let dragonWidth = 60;
+let dragonHeight = 60;
 let dragonX = boardWidth;
 let dragonY = 0;
+let dragonVelosity = -4;
+
+let dragonImg;
+
+//spider
+
+let spiderArray = [];
+let spiderWidth = 60;
+let spiderHeight = 60;
+let spiderX = boardWidth;
+let spiderY = 0;
+let spiderVelosityX = -2;
+let spiderVelosityY = 1.5;
+let spiderDirrection = 0;
+
+let spiderImg;
+
+//web
+
+let webArray = [];
+let webWidth = 60;
+let webHeight = boardHight;
+let webX = boardWidth;
+let webY = -boardHight;
+let webDirrection = 0;
+
+let webImg;
 
 //gears
 
@@ -64,6 +94,7 @@ let gameState = 0;
 let score = 0;
 let gearscore = 0;
 let scaleImg = 10;
+let difficultyState = 0;
 
 window.onload = function(){
     board = document.getElementById("board");
@@ -88,6 +119,15 @@ window.onload = function(){
     bottomPipeImg = new Image();
     bottomPipeImg.src = "./toppipe2.png";
 
+    dragonImg = new Image();
+    dragonImg.src = "./dragon.png";
+
+    spiderImg = new Image();
+    spiderImg.src = "./spider.png";
+
+    webImg = new Image();
+    webImg.src = "./web.png";
+
     gearImg1 = new Image();
     gearImg1.src = "./gear.png";
     gearImg2 = new Image();
@@ -111,7 +151,6 @@ window.onload = function(){
     requestAnimationFrame(update);
     // bartimer1 = setInterval(placePipes, 10000); //every 10 sec.
     // bartimer2 = setInterval(placeGears, 2000); //every 2 sec.
-    // bartimer3 = setInterval(setDifficulty, 4000); //every 4 sec.
     document.addEventListener("keydown", moveBird);
 }
 
@@ -139,6 +178,11 @@ function update() {
                     for (let i = 0; i < gearArray.length; i++) {
                         let gear = gearArray[i];
                         context.drawImage(gear.img, gear.x, gear.y, gear.width, gear.height);
+                    }
+                    for (let i = 0; i< spiderArray.length; i++){
+                        let spider = spiderArray[i];
+                        context.drawImage(webImg, spider.x, spider.y - boardHight + spiderHeight/2, spider.width, boardHight);
+                        context.drawImage(spider.img, spider.x, spider.y, spider.width, spider.height);
                     }
                     context.drawImage(gearCollectTable, 0, 0, 140, 80);
                     context.fillStyle = "white";
@@ -191,6 +235,11 @@ function update() {
                         let gear = gearArray[i];
                         context.drawImage(gear.img, gear.x, gear.y, gear.width, gear.height);
                     }
+                    for (let i = 0; i< spiderArray.length; i++){
+                        let spider = spiderArray[i];
+                        context.drawImage(webImg, spider.x, spider.y - boardHight + spiderHeight/2, spider.width, boardHight);
+                        context.drawImage(spider.img, spider.x, spider.y, spider.width, spider.height);
+                    }
                     context.drawImage(gearCollectTable, 0, 0, 140, 80);
                     context.fillStyle = "white";
                         context.font = "30px WoWfont";
@@ -201,7 +250,7 @@ function update() {
                      else {
                         context.fillText("/45",90,45);
                     }
-                    context.drawImage(textGameWin,200+(250*(100-scaleImg)/100),25+(225*(100-scaleImg)/100),500*(scaleImg/100),450*(scaleImg/100));
+                    context.drawImage(textGameWin,100+(350*(100-scaleImg)/100),25+(300*(100-scaleImg)/100),700*(scaleImg/100),600*(scaleImg/100));
                     scaleImg += 1;
                 }
                 else {
@@ -215,6 +264,11 @@ function update() {
                         let gear = gearArray[i];
                         context.drawImage(gear.img, gear.x, gear.y, gear.width, gear.height);
                     }
+                    for (let i = 0; i< spiderArray.length; i++){
+                        let spider = spiderArray[i];
+                        context.drawImage(webImg, spider.x, spider.y - boardHight + spiderHeight/2, spider.width, boardHight);
+                        context.drawImage(spider.img, spider.x, spider.y, spider.width, spider.height);
+                    }
                     context.drawImage(gearCollectTable, 0, 0, 140, 80);
                     context.fillStyle = "white";
                         context.font = "30px WoWfont";
@@ -225,7 +279,7 @@ function update() {
                      else {
                         context.fillText("/45",90,45);
                     }
-                    context.drawImage(textGameWin,200,25,500,450);
+                    context.drawImage(textGameWin,100,25,700,600);
                 }
             }
             return;
@@ -261,6 +315,60 @@ function update() {
     //clear pipes
     while (pipeArray.length > 0 && pipeArray[0].x < -pipeWidth) {
         pipeArray.shift(); //удаляет 1-ю преграду
+    }
+
+    //spiders
+
+    for (let i = 0; i< spiderArray.length; i++) {
+        if (difficultyState <2 ) {
+            spiderArray.length = 0;
+        }
+        let spider = spiderArray[i];
+        spider.x += spiderVelosityX;
+        if (spider.dirrection == 0) {
+            spider.y += spiderVelosityY;
+        }
+        else {
+            spider.y += -spiderVelosityY;
+        }
+
+        if (spider.y < 0 && spider.dirrection == 1) {
+            spider.dirrection = 0;
+        }
+        if ((spider.y + spider.height) > boardHight && spider.dirrection == 0) {
+            spider.dirrection = 1;
+        }
+
+        context.drawImage(webImg, spider.x, spider.y - boardHight + spiderHeight/2, spider.width, boardHight);
+        context.drawImage(spider.img, spider.x, spider.y, spider.width, spider.height);
+
+        if (detectCollision(bird,spider)) {
+            gameState = 2;
+        }
+    }
+
+    //clear spiders
+    while (spiderArray.length > 0 && spiderArray[0].x < -spiderWidth){
+        spiderArray.shift(); // удаляет первого паука.
+    }
+
+    //dragons
+    for (let i =0; i < dragonArray.length; i++) {
+        if (difficultyState < 1) {
+            dragonArray.length = 0;
+        }
+            let dragon = dragonArray[i];
+            dragon.x += dragonVelosity;
+            context.drawImage(dragon.img, dragon.x, dragon.y, dragon.width, dragon.height);
+            if (detectCollision(bird,dragon)) {
+                gameState = 2;
+            }
+    }
+
+    //clear dragons
+
+    while (dragonArray.length >0 && dragonArray[0].x < -dragonWidth) {
+        dragonArray.shift(); //удаляет дракона, который вылетел
     }
 
     //gears
@@ -304,8 +412,18 @@ function update() {
     else {
         context.fillText("/45",90,45);
     }
+    
+    //меняем сложность
+    if (gearscore > 10 && gearscore < 24) {
+        difficultyState = 1;
+    }
 
-    if (gearscore == 1) {
+    if (gearscore > 25) {
+        difficultyState = 2;
+    }
+
+    //условие победы
+    if (gearscore == 45) {
         gameState = 3;
     }
 
@@ -343,6 +461,42 @@ function placePipes() {
     pipeArray.push(bottomPipe);
 }
 
+function placeDragons() {
+    if (gameState == 2) {
+        return
+    }
+
+    let randomDragonY = board.height/2 + (Math.random() - 0.5)*(boardHight/2);
+    let dragon = {
+        img : dragonImg,
+        x : dragonX,
+        y : randomDragonY,
+        width : dragonWidth,
+        height : dragonHeight,
+    }
+
+    dragonArray.push(dragon);
+}
+
+function placeSpiders() {
+    if (gameState == 2) {
+        return
+    }
+
+    let randomSpiderY = board.height/2 + (Math.random() - 0.5)*(boardHight/2);
+    let randomSpiderDirrection = Math.floor(Math.random()*2);
+    let spider = {
+        img : spiderImg,
+        x : spiderX,
+        y : randomSpiderY,
+        width : spiderWidth,
+        height : spiderHeight,
+        dirrection : randomSpiderDirrection
+    }
+
+    spiderArray.push(spider);
+}
+
 function placeGears() {
     if (gameState == 2) {
         return
@@ -373,6 +527,8 @@ function moveBird(e) {
             context.clearRect(0, 0, board.width, board.height);
             bird.y = birdY;
             pipeArray = [];
+            dragonArray = [];
+            spiderArray = [];
             score = 0;
             gameState = 0;
             gearArray = [];
@@ -381,18 +537,23 @@ function moveBird(e) {
             scaleImg = 10;
             clearInterval(bartimer1);
             clearInterval(bartimer2);
-            //clearInterval(bartimer3);
+            clearInterval(difbartimer1);
+            clearInterval(difbartimer2);
         }
         else if (gameState == 0) {
             bartimer1 = setInterval(placePipes, 10000); //every 10 sec.
             bartimer2 = setInterval(placeGears, 2000); //every 2 sec.
-            //bartimer3 = setInterval(setDifficulty, 4000); //every 4 sec.
+            difbartimer1 = setInterval(placeDragons, 6000); //every 6 sec.
+            difbartimer2 = setInterval(placeSpiders, 6500); //every 6,5 sec.
             gameState = 1;
+            difficultyState = 0;
         }
         else if (gameState == 3 && e.code == "KeyX") {
             context.clearRect(0, 0, board.width, board.height);
             bird.y = birdY;
             pipeArray = [];
+            dragonArray = [];
+            spiderArray = [];
             score = 0;
             gameState = 0;
             gearArray = [];
@@ -401,7 +562,8 @@ function moveBird(e) {
             scaleImg = 10;
             clearInterval(bartimer1);
             clearInterval(bartimer2);
-            //clearInterval(bartimer3);
+            clearInterval(difbartimer1);
+            clearInterval(difbartimer2);
         }
     }
 }
