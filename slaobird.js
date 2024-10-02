@@ -129,7 +129,53 @@ function update() {
             break;
         case 2:
             if (gameState == 2) {
-                context.drawImage(textGameOver, 300, 200, 300, 150);
+                if (scaleImg <100) {
+                    context.clearRect(0, 0, board.width, board.height);
+                    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+                    for (let i = 0; i < pipeArray.length; i++) {
+                        let pipe = pipeArray[i];
+                        context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
+                    }
+                    for (let i = 0; i < gearArray.length; i++) {
+                        let gear = gearArray[i];
+                        context.drawImage(gear.img, gear.x, gear.y, gear.width, gear.height);
+                    }
+                    context.drawImage(gearCollectTable, 0, 0, 140, 80);
+                    context.fillStyle = "white";
+                        context.font = "30px WoWfont";
+                    context.fillText(gearscore, 60, 45)
+                    if (gearscore<10) {
+                        context.fillText("/45", 75, 45);
+                     }
+                     else {
+                        context.fillText("/45",90,45);
+                    }
+                    context.drawImage(textGameOver, 300, -150 + 350*(scaleImg/100), 300, 150);
+                    scaleImg += 5;
+                }
+                else {
+                    context.clearRect(0, 0, board.width, board.height);
+                    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+                    for (let i = 0; i < pipeArray.length; i++) {
+                        let pipe = pipeArray[i];
+                        context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
+                    }
+                    for (let i = 0; i < gearArray.length; i++) {
+                        let gear = gearArray[i];
+                        context.drawImage(gear.img, gear.x, gear.y, gear.width, gear.height);
+                    }
+                    context.drawImage(gearCollectTable, 0, 0, 140, 80);
+                    context.fillStyle = "white";
+                        context.font = "30px WoWfont";
+                    context.fillText(gearscore, 60, 45)
+                    if (gearscore<10) {
+                        context.fillText("/45", 75, 45);
+                     }
+                     else {
+                        context.fillText("/45",90,45);
+                    }
+                    context.drawImage(textGameOver, 300, 200, 300, 150);
+                }
             }
             return;
         case 3:
