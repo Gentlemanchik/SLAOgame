@@ -97,6 +97,13 @@ let gearscore = 0;
 let scaleImg = 10;
 let difficultyState = 0;
 
+//audio
+
+let musicBG;
+let musicGameOver;
+let musicGOYes = true;
+let musicCoin;
+
 window.onload = function(){
     board = document.getElementById("board");
     board.height = boardHight;
@@ -149,6 +156,15 @@ window.onload = function(){
     gearCollectTable = new Image();
     gearCollectTable.src = "./scoretable.png";
 
+    musicBG = new Audio();
+    musicBG.src = "./music.mp3";
+    musicGameOver = new Audio();
+    musicGameOver.src = "./gameovermusic.mp3";
+    musicWin = new Audio();
+    musicWin.src = "./victory.mp3";
+    musicCoin = new Audio();
+    musicCoin.src = "./collectcoin.mp3";
+
     requestAnimationFrame(update);
     // bartimer1 = setInterval(placePipes, 10000); //every 10 sec.
     // bartimer2 = setInterval(placeGears, 2000); //every 2 sec.
@@ -161,6 +177,8 @@ function update() {
     //проверка состояния игры
     switch(gameState) {
         case 0:
+            musicGameOver.pause();
+            musicGameOver.currentTime = 0;
             if (gameState == 0) {
                 context.drawImage(textStart, boardWidth/4, boardHight/4, boardWidth/2, boardHight/2);
             }
@@ -190,10 +208,10 @@ function update() {
                         context.font = "30px WoWfont";
                     context.fillText(gearscore, 60, 45)
                     if (gearscore<10) {
-                        context.fillText("/45", 75, 45);
+                        context.fillText("/30", 75, 45);
                      }
                      else {
-                        context.fillText("/45",90,45);
+                        context.fillText("/30",90,45);
                     }
                     context.drawImage(textGameOver, 300, -150 + 350*(scaleImg/100), 300, 150);
                     scaleImg += 5;
@@ -214,16 +232,28 @@ function update() {
                         context.font = "30px WoWfont";
                     context.fillText(gearscore, 60, 45)
                     if (gearscore<10) {
-                        context.fillText("/45", 75, 45);
+                        context.fillText("/30", 75, 45);
                      }
                      else {
-                        context.fillText("/45",90,45);
+                        context.fillText("/30",90,45);
                     }
                     context.drawImage(textGameOver, 300, 200, 300, 150);
                 }
             }
+            if (musicGOYes) {
+                musicGameOver.play();
+                musicGOYes = false;
+            }
+            musicBG.pause();
+            musicBG.currentTime = 0;
             return;
         case 3:
+            musicBG.pause();
+            musicBG.currentTime = 0;
+            if (musicGOYes) {
+                musicWin.play();
+                musicGOYes = false;
+            }
             if (gameState == 3) {
                 if (scaleImg < 100) {
                     context.clearRect(0, 0, board.width, board.height);
@@ -246,10 +276,10 @@ function update() {
                         context.font = "30px WoWfont";
                     context.fillText(gearscore, 60, 45)
                     if (gearscore<10) {
-                        context.fillText("/45", 75, 45);
+                        context.fillText("/30", 75, 45);
                      }
                      else {
-                        context.fillText("/45",90,45);
+                        context.fillText("/30",90,45);
                     }
                     context.drawImage(textGameWin,100+(350*(100-scaleImg)/100),25+(300*(100-scaleImg)/100),700*(scaleImg/100),600*(scaleImg/100));
                     scaleImg += 1;
@@ -275,10 +305,10 @@ function update() {
                         context.font = "30px WoWfont";
                     context.fillText(gearscore, 60, 45)
                     if (gearscore<10) {
-                        context.fillText("/45", 75, 45);
+                        context.fillText("/30", 75, 45);
                      }
                      else {
-                        context.fillText("/45",90,45);
+                        context.fillText("/30",90,45);
                     }
                     context.drawImage(textGameWin,100,25,700,600);
                 }
@@ -381,6 +411,9 @@ function update() {
 
         if (!gear.collect && detectCollision(bird,gear)) {
             gearscore += 1;
+            if (!gear.collect) {
+                musicCoin.play();
+            }
             gear.collect = true;
             gear.img = gearImgCollect;
         }
@@ -408,10 +441,10 @@ function update() {
     //context.fillText(score, 5, 45);
     context.fillText(gearscore, 60, 45)
     if (gearscore<10) {
-        context.fillText("/45", 75, 45);
+        context.fillText("/30", 75, 45);
     }
     else {
-        context.fillText("/45",90,45);
+        context.fillText("/30",90,45);
     }
     
     //меняем сложность
@@ -419,12 +452,12 @@ function update() {
         difficultyState = 1;
     }
 
-    if (gearscore > 15) {
+    if (gearscore > 20) {
         difficultyState = 2;
     }
 
     //условие победы
-    if (gearscore == 45) {
+    if (gearscore == 5) {
         gameState = 3;
     }
 
@@ -542,12 +575,14 @@ function moveBird(e) {
             clearInterval(difbartimer2);
         }
         else if (gameState == 0) {
+            musicBG.play();
             bartimer1 = setInterval(placePipes, 10000); //every 10 sec.
             bartimer2 = setInterval(placeGears, 2000); //every 2 sec.
             difbartimer1 = setInterval(placeDragons, 6000); //every 6 sec.
             difbartimer2 = setInterval(placeSpiders, 6500); //every 6,5 sec.
             gameState = 1;
             difficultyState = 0;
+            musicGOYes = true;
         }
         else if (gameState == 3 && e.code == "KeyX") {
             context.clearRect(0, 0, board.width, board.height);
