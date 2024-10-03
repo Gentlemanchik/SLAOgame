@@ -164,6 +164,7 @@ window.onload = function(){
     musicWin.src = "./victory.mp3";
     musicCoin = new Audio();
     musicCoin.src = "./collectcoin.mp3";
+    musicBG.volume = 0.5;
 
     requestAnimationFrame(update);
     // bartimer1 = setInterval(placePipes, 10000); //every 10 sec.
