@@ -449,16 +449,16 @@ function update() {
     }
     
     //меняем сложность
-    if (gearscore > 10 && gearscore < 24) {
+    if (gearscore > 8 && gearscore < 17) {
         difficultyState = 1;
     }
 
-    if (gearscore > 20) {
+    if (gearscore > 18) {
         difficultyState = 2;
     }
 
     //условие победы
-    if (gearscore == 5) {
+    if (gearscore == 30) {
         gameState = 3;
     }
 
