@@ -107,7 +107,7 @@ let musicCoin;
 //fps
 
 let msPrev = window.performance.now();
-const fps = 5;
+const fps = 60;
 const msPerFrame = 1000 / fps;
 let frames = 0;
 
