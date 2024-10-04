@@ -86,7 +86,7 @@ let gearY = boardHight/2;
 let velosityX = -2;
 let velosityY = 0; //jump speed
 let gravity = 0.25;
-let jumpSpeed = -4.5;
+let jumpSpeed = -5;
 let distance = 0;
 let dx = 2;
 
@@ -103,13 +103,6 @@ let musicBG;
 let musicGameOver;
 let musicGOYes = true;
 let musicCoin;
-
-//fps
-
-let msPrev = window.performance.now();
-const fps = 60;
-const msPerFrame = 1000 / fps;
-let frames = 0;
 
 window.onload = function(){
     board = document.getElementById("board");
@@ -173,6 +166,7 @@ window.onload = function(){
     musicCoin.src = "./collectcoin.mp3";
     musicBG.volume = 0.5;
 
+    requestAnimationFrame(update);
     // bartimer1 = setInterval(placePipes, 10000); //every 10 sec.
     // bartimer2 = setInterval(placeGears, 2000); //every 2 sec.
     document.addEventListener("keydown", moveBird);
@@ -181,15 +175,6 @@ window.onload = function(){
 function update() {
     requestAnimationFrame(update);
 
-    const msNow = window.performance.now()
-  const msPassed = msNow - msPrev
-
-  if (msPassed < msPerFrame) return
-
-  const excessTime = msPassed % msPerFrame
-  msPrev = msNow - excessTime
-
-  frames++
     //проверка состояния игры
     switch(gameState) {
         case 0:
@@ -629,11 +614,3 @@ function detectCollision(a,b) {
            a.y + a.height > b.y;
 }
 
-setInterval(() => {
-    console.log(frames)
-  }, 1000)
-
-update();
-
-//ds;fkm
-//1234555
