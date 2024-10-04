@@ -180,6 +180,8 @@ function update() {
         case 0:
             musicGameOver.pause();
             musicGameOver.currentTime = 0;
+            musicGOYes.pause();
+            musicGOYes.currentTime = 0;
             if (gameState == 0) {
                 context.drawImage(textStart, boardWidth/4, boardHight/4, boardWidth/2, boardHight/2);
             }
