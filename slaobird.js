@@ -170,6 +170,10 @@ window.onload = function(){
     // bartimer1 = setInterval(placePipes, 10000); //every 10 sec.
     // bartimer2 = setInterval(placeGears, 2000); //every 2 sec.
     document.addEventListener("keydown", moveBird);
+    musicGameOver.pause();
+    musicGameOver.currentTime = 0;
+    musicGOYes.pause();
+    musicGOYes.currentTime = 0;
 }
 
 function update() {
