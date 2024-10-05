@@ -85,7 +85,7 @@ let gearY = boardHight/2;
 
 let velosityX = -2;
 let velosityY = 0; //jump speed
-let gravity = 0.25;
+let gravity = 0.2;
 let jumpSpeed = -4.5;
 let distance = 0;
 let dx = 2;
@@ -103,13 +103,6 @@ let musicBG;
 let musicGameOver;
 let musicGOYes = true;
 let musicCoin;
-
-//fps
-
-let msPrev = window.performance.now();
-const fps = 60;
-const msPerFrame = 1000 / fps;
-let frames = 0;
 
 window.onload = function(){
     board = document.getElementById("board");
@@ -173,6 +166,7 @@ window.onload = function(){
     musicCoin.src = "./collectcoin.mp3";
     musicBG.volume = 0.5;
 
+    requestAnimationFrame(update);
     // bartimer1 = setInterval(placePipes, 10000); //every 10 sec.
     // bartimer2 = setInterval(placeGears, 2000); //every 2 sec.
     document.addEventListener("keydown", moveBird);
@@ -181,22 +175,11 @@ window.onload = function(){
 function update() {
     requestAnimationFrame(update);
 
-    const msNow = window.performance.now()
-  const msPassed = msNow - msPrev
-
-  if (msPassed < msPerFrame) return
-
-  const excessTime = msPassed % msPerFrame
-  msPrev = msNow - excessTime
-
-  frames++
     //проверка состояния игры
     switch(gameState) {
         case 0:
             musicGameOver.pause();
             musicGameOver.currentTime = 0;
-            musicBG.pause();
-            musicBG.currentTime = 0 ;
             if (gameState == 0) {
                 context.drawImage(textStart, boardWidth/4, boardHight/4, boardWidth/2, boardHight/2);
             }
@@ -466,16 +449,16 @@ function update() {
     }
     
     //меняем сложность
-    if (gearscore > 8 && gearscore < 17) {
+    if (gearscore > 10 && gearscore < 24) {
         difficultyState = 1;
     }
 
-    if (gearscore > 18) {
+    if (gearscore > 20) {
         difficultyState = 2;
     }
 
     //условие победы
-    if (gearscore == 30) {
+    if (gearscore == 5) {
         gameState = 3;
     }
 
@@ -630,9 +613,3 @@ function detectCollision(a,b) {
            a.y < b.y + b.height &&
            a.y + a.height > b.y;
 }
-
-setInterval(() => {
-    console.log(frames)
-  }, 1000)
-
-update();
