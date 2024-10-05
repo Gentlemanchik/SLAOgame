@@ -458,7 +458,7 @@ function update() {
     }
 
     //условие победы
-    if (gearscore == 5) {
+    if (gearscore == 30) {
         gameState = 3;
     }
 
