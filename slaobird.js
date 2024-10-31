@@ -85,8 +85,8 @@ let gearY = boardHight/2;
 
 let velosityX = -2;
 let velosityY = 0; //jump speed
-let gravity = 0.2;
-let jumpSpeed = -4.5;
+let gravity = 0.11;
+let jumpSpeed = -3.3;
 let distance = 0;
 let dx = 2;
 
